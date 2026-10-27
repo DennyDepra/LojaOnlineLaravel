@@ -149,6 +149,16 @@
             <span class="text-muted small">
                 Painel Administrativo
             </span>
+
+            {{-- Encerra a sessão administrativa com segurança. --}}
+            <form action="{{ route('admin.logout') }}" method="POST">
+                @csrf
+
+                <button type="submit" class="btn btn-outline-danger">
+                    <i class="bi bi-box-arrow-right"></i>
+                    Sair
+                </button>
+            </form>
         </div>
     </div>
 </header>
