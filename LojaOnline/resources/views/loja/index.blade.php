@@ -4,106 +4,242 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>LojaOnline - Loja</title>
+    <title>BrisaGamer</title>
+    <link rel="icon"
+        type="image/png"
+        href="{{ asset('img/EmblemaOnda.png') }}">
 
     <!-- Importa os estilos do Bootstrap 5. -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
+    <!-- Identidade visual Neon Sunset (somente estilos) -->
+    <link rel="stylesheet" href="{{ asset('css/neon-sunset.css') }}">
 </head>
 
 <body class="bg-light">
 
-        <!-- Cabeçalho da LojaOnline -->
-    <nav class="navbar bg-white shadow-sm">
-        <div class="container">
+    <!-- Cabeçalho BrisaGamer -->
+    <nav class="navbar navbar-brisa">
 
-            <!-- Logo da loja à esquerda -->
-            <a class="navbar-brand fw-bold text-primary"
-            href="{{ route('loja.index') }}">
-                LojaOnline
+        <div class="container brisa-navbar-container">
+
+        {{-- Lado esquerdo do cabeçalho: categorias + logo --}}
+        <div class="brisa-navbar-esquerda">
+
+            {{-- Abre o menu lateral de categorias --}}
+            <button type="button"
+                    class="btn brisa-btn-categorias"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#menuCategorias"
+                    aria-controls="menuCategorias">
+
+                <span class="me-1">&#9776;</span>
+                Categorias
+            </button>
+
+            {{-- Logo BrisaGamer --}}
+            <a href="{{ route('loja.index') }}"
+            class="navbar-brand brisa-logo">
+
+                <img src="{{ asset('img/EmblemaOnda.png') }}"
+                    alt="Logo BrisaGamer"
+                    class="brisa-onda">
+
+                <span class="brisa-nome">
+                    <span class="brisa-texto">Brisa</span><span class="gamer-texto">Gamer</span>
+                </span>
             </a>
 
-            <!-- Agrupa todos os botões à direita -->
-            <div class="d-flex align-items-center justify-content-end gap-2 flex-wrap">
+        </div>
 
-                {{-- Botões de autenticação --}}
+            <!-- Botões alinhados à direita -->
+            <div class="brisa-navbar-acoes">
+
                 @guest
-
                     <!-- Abre o modal de login -->
                     <button type="button"
-                            class="btn btn-outline-primary"
+                            class="btn btn-outline-light"
                             data-bs-toggle="modal"
                             data-bs-target="#modalLogin">
                         Entrar
                     </button>
-
                 @else
 
-                    {{-- Botão exclusivo do administrador --}}
+                    <!-- Painel exclusivo do administrador -->
                     @if (auth()->user()->is_admin)
                         <a href="{{ route('admin.index') }}"
-                        class="btn btn-outline-primary">
+                        class="btn btn-outline-light">
                             Painel Admin
                         </a>
                     @endif
 
-                    <!-- Nome do usuário autenticado -->
-                    <span class="text-muted small">
+                    <!-- Nome do usuário -->
+                    <span class="text-white small">
                         Olá, {{ auth()->user()->name }}
                     </span>
 
-                    <!-- Botão para encerrar a sessão -->
+                    <!-- Logout -->
                     <form action="{{ route('cliente.sair') }}"
                         method="POST"
                         class="m-0">
                         @csrf
 
                         <button type="submit"
-                                class="btn btn-outline-primary">
+                                class="btn btn-outline-light">
                             Sair
                         </button>
                     </form>
 
                 @endguest
 
-                <!-- Botão do carrinho -->
+                <!-- Carrinho -->
                 <button type="button"
-                        class="btn btn-outline-primary"
+                        class="btn btn-outline-light"
                         data-bs-toggle="modal"
                         data-bs-target="#modalCarrinho">
 
                     Meu carrinho
 
-                    <!-- Contador de produtos -->
                     <span id="contadorCarrinho"
                         class="badge bg-primary ms-1">
                         {{ collect(session('carrinho', []))->sum('quantidade') }}
                     </span>
+                </button>
 
+            </div>
+        </div>
+    </nav>
+
+    {{-- ============================================
+        MENU LATERAL DE CATEGORIAS - BRISAGAMER
+        ============================================ --}}
+
+    <div class="offcanvas offcanvas-start brisa-menu-lateral"
+        tabindex="-1"
+        id="menuCategorias"
+        aria-labelledby="tituloMenuCategorias">
+
+        {{-- Cabeçalho do menu --}}
+        <div class="offcanvas-header">
+
+            <h5 class="offcanvas-title fw-bold"
+                id="tituloMenuCategorias">
+                Categorias
+            </h5>
+
+            <button type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Fechar">
+            </button>
+
+        </div>
+
+        {{-- Categorias organizadas verticalmente --}}
+        <div class="offcanvas-body">
+
+            <div class="brisa-categorias">
+
+                <button type="button"
+                        class="brisa-categoria ativo"
+                        data-categoria="todas">
+                    Todas as categorias
+                </button>
+
+                <button type="button"
+                        class="brisa-categoria"
+                        data-categoria="pc_gamer">
+                    PC Gamer Montado
+                </button>
+
+                <button type="button"
+                        class="brisa-categoria"
+                        data-categoria="consoles">
+                    Consoles
+                </button>
+
+                <button type="button"
+                        class="brisa-categoria"
+                        data-categoria="perifericos">
+                    Periféricos
+                </button>
+
+                <button type="button"
+                        class="brisa-categoria"
+                        data-categoria="monitores">
+                    Monitores
+                </button>
+
+                <button type="button"
+                        class="brisa-categoria"
+                        data-categoria="jogos">
+                    Jogos
                 </button>
 
             </div>
 
         </div>
-    </nav>
+    </div>
+
+
 
     <!-- Catálogo de produtos. -->
     <main class="container py-5">
 
-        <h2 class="fw-bold">Bem-vindo à LojaOnline!</h2>
 
-        <p class="text-muted">
-            Confira os produtos disponíveis em nossa loja.
-        </p>
+    {{-- ==========================================
+        TÍTULO DA LOJA + BARRA DE PESQUISA
+    ========================================== --}}
+    <div class="row align-items-center g-3 mb-4">
+
+        {{-- Lado esquerdo: título e descrição --}}
+        <div class="col-12 col-lg-6">
+
+            <h2 class="fw-bold" id="tituloCategoria">
+                Bem-vindo à BrisaGamer!
+            </h2>
+
+            <p class="text-muted mb-0" id="descricaoCategoria">
+                Confira os produtos disponíveis em nossa loja.
+            </p>
+
+        </div>
+
+        {{-- Lado direito: pesquisa de produtos --}}
+        <div class="col-12 col-lg-6">
+
+            <div class="brisa-pesquisa">
+
+                {{-- Ícone de pesquisa --}}
+                <span class="brisa-pesquisa-icone">
+                    &#128269;
+                </span>
+
+                {{-- Campo de pesquisa --}}
+                <input type="search"
+                    id="pesquisaProduto"
+                    class="brisa-pesquisa-input"
+                    placeholder="O que você está procurando?"
+                    autocomplete="off"
+                    aria-label="Pesquisar produtos">
+
+            </div>
+
+        </div>
+
+    </div>
+
 
         <div class="row g-4">
 
             {{-- Percorre os produtos enviados pelo LojaController. --}}
             @forelse($produtos as $produto)
 
-                <div class="col-md-4">
+                {{-- Identifica o produto e sua categoria para o filtro --}}
+                <div class="col-md-4 item-produto"
+                    data-categoria="{{ $produto->categoria }}">
 
                     <div class="card h-100 shadow-sm">
 
@@ -298,6 +434,29 @@
             @endforelse
 
         </div>
+        </div>
+
+
+    {{-- Mensagem exibida quando nenhum produto é encontrado --}}
+    <div id="mensagemSemProdutos"
+        class="brisa-sem-produtos text-center mt-4 d-none">
+
+        <div class="brisa-sem-produtos-icone">
+            &#128269;
+        </div>
+
+        <h4 class="fw-bold mb-2">
+            Nenhum produto encontrado
+        </h4>
+
+        <p class="mb-0">
+            Não encontramos produtos para sua pesquisa.
+            Tente outro nome ou selecione uma categoria diferente.
+        </p>
+
+    </div>
+
+
     </main>
 
     {{-- =====================================================
@@ -318,7 +477,7 @@
 
                     <h5 class="modal-title fw-bold"
                         id="tituloModalLogin">
-                        Entrar na LojaOnline
+                        Entrar na BrisaGamer
                     </h5>
 
                     <button type="button"
@@ -497,6 +656,44 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // ==================================================
+    // ABERTURA AUTOMÁTICA DO MODAL DE LOGIN
+    // ==================================================
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // Recupera os parâmetros presentes na URL.
+        const parametros = new URLSearchParams(window.location.search);
+
+        // Verifica se o usuário veio da página de cadastro.
+        if (parametros.get('abrirLogin') === '1') {
+
+            // Localiza o modal de login já existente na loja.
+            const modalLogin = document.getElementById('modalLogin');
+
+            // Garante que o modal existe antes de tentar abri-lo.
+            if (modalLogin) {
+
+                // Utiliza o Bootstrap para abrir o modal automaticamente.
+                const instanciaModal = bootstrap.Modal.getOrCreateInstance(modalLogin);
+
+                instanciaModal.show();
+            }
+
+            // Remove o parâmetro da URL sem recarregar a página.
+            // Isso evita que o modal abra novamente ao atualizar.
+            parametros.delete('abrirLogin');
+
+            const novaQuery = parametros.toString();
+
+            const novaUrl = window.location.pathname
+                + (novaQuery ? '?' + novaQuery : '')
+                + window.location.hash;
+
+            window.history.replaceState({}, '', novaUrl);
+        }
+    });
+
         // =====================================================
         // CONFIGURAÇÕES DO CARRINHO
         // =====================================================
@@ -861,7 +1058,159 @@
         if (mensagemInicial) {
             notificar(mensagemInicial, erroInicial);
         }
+
+
+        // Fecha o menu lateral após selecionar uma categoria.
+        const menu = document.getElementById('menuCategorias');
+
+        // Recupera a instância do Offcanvas do Bootstrap.
+        const instancia = bootstrap.Offcanvas.getInstance(menu);
+
+        // Fecha o menu sem recarregar a página.
+        if (instancia) {
+            instancia.hide();
+        }
+
     </script>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ==============================================
+        // PESQUISA E FILTRO DE CATEGORIAS
+        // ==============================================
+
+        const botoesCategorias = document.querySelectorAll(
+            '#menuCategorias .brisa-categoria'
+        );
+
+        const produtos = document.querySelectorAll('.item-produto');
+        const campoPesquisa = document.getElementById('pesquisaProduto');
+        const menuCategorias = document.getElementById('menuCategorias');
+        const tituloCategoria = document.getElementById('tituloCategoria');
+        const descricaoCategoria = document.getElementById('descricaoCategoria');
+        const mensagem = document.getElementById('mensagemSemProdutos');
+
+        // Categoria selecionada inicialmente.
+        let categoriaSelecionada = 'todas';
+
+        // Nomes apresentados no título.
+        const nomesCategorias = {
+            todas: 'Bem-vindo à BrisaGamer!',
+            pc_gamer: 'PC Gamer Montado',
+            consoles: 'Consoles',
+            perifericos: 'Periféricos',
+            monitores: 'Monitores',
+            jogos: 'Jogos'
+        };
+
+        // ==============================================
+        // FILTRA OS PRODUTOS
+        // ==============================================
+        function filtrarProdutos() {
+
+            // Texto digitado pelo cliente.
+            const pesquisa = campoPesquisa
+                ? campoPesquisa.value.toLocaleLowerCase('pt-BR').trim()
+                : '';
+
+            let encontrados = 0;
+
+            produtos.forEach(function (produto) {
+
+                const categoriaProduto = produto.dataset.categoria || '';
+
+                const nomeElemento = produto.querySelector('.card-title');
+
+                const nomeProduto = nomeElemento
+                    ? nomeElemento.textContent.toLocaleLowerCase('pt-BR')
+                    : '';
+
+                // Verifica a categoria.
+                const correspondeCategoria =
+                    categoriaSelecionada === 'todas' ||
+                    categoriaProduto === categoriaSelecionada;
+
+                // Verifica o nome pesquisado.
+                const correspondePesquisa = nomeProduto.includes(pesquisa);
+
+                // Exibe somente produtos que atendem aos dois critérios.
+                const mostrar = correspondeCategoria && correspondePesquisa;
+
+                produto.classList.toggle('d-none', !mostrar);
+
+                if (mostrar) {
+                    encontrados++;
+                }
+            });
+
+            // Mensagem quando não houver resultados.
+            if (mensagem) {
+                mensagem.classList.toggle('d-none', encontrados > 0);
+            }
+        }
+
+        // ==============================================
+        // SELEÇÃO DE CATEGORIAS
+        // ==============================================
+        botoesCategorias.forEach(function (botao) {
+
+            botao.addEventListener('click', function () {
+
+                categoriaSelecionada = botao.dataset.categoria;
+
+                // Atualiza o destaque do menu.
+                botoesCategorias.forEach(function (item) {
+                    item.classList.remove('ativo');
+                });
+
+                botao.classList.add('ativo');
+
+                // Atualiza o título.
+                if (tituloCategoria) {
+                    tituloCategoria.textContent =
+                        nomesCategorias[categoriaSelecionada] || 'BrisaGamer';
+                }
+
+                // Atualiza a descrição.
+                if (descricaoCategoria) {
+                    descricaoCategoria.textContent =
+                        categoriaSelecionada === 'todas'
+                            ? 'Confira os produtos disponíveis em nossa loja.'
+                            : 'Confira os produtos disponíveis nesta categoria.';
+                }
+
+                // Atualiza os produtos.
+                filtrarProdutos();
+
+                // Fecha o menu lateral.
+                if (menuCategorias) {
+                    const instancia = bootstrap.Offcanvas.getInstance(
+                        menuCategorias
+                    );
+
+                    if (instancia) {
+                        instancia.hide();
+                    }
+                }
+            });
+        });
+
+        // ==============================================
+        // PESQUISA AUTOMÁTICA
+        // ==============================================
+        if (campoPesquisa) {
+            campoPesquisa.addEventListener('input', filtrarProdutos);
+        }
+
+        // Exibe os produtos ao carregar a página.
+        filtrarProdutos();
+
+    });
+    </script>
+
+
 
 </body>
 </html>

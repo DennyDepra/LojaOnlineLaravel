@@ -3,28 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar conta - LojaOnline</title>
-
+    <title>BrisaGamer</title>
+    {{-- Ícone da BrisaGamer na aba do navegador --}}
+    <link rel="icon"
+        type="image/png"
+        href="{{ asset('img/EmblemaOnda.png') }}">
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet">
+    <!-- Identidade visual Neon Sunset (somente estilos) -->
+    <link rel="stylesheet" href="{{ asset('css/neon-sunset.css') }}">
 </head>
 
 <body class="bg-light">
 
-<nav class="navbar bg-white shadow-sm">
-    <div class="container">
-        <a href="{{ route('loja.index') }}"
-           class="navbar-brand fw-bold text-primary">
-            LojaOnline
-        </a>
 
-        <a href="{{ route('loja.index') }}"
-           class="btn btn-outline-secondary">
-            Continuar sem cadastro
-        </a>
-    </div>
-</nav>
+    <!-- Cabeçalho BrisaGamer -->
+    <nav class="navbar navbar-brisa">
+
+        <div class="container brisa-navbar-container">
+
+            <!-- Logo com onda roxa -->
+            <a href="{{ route('loja.index') }}"
+            class="navbar-brand brisa-logo">
+
+                <img src="{{ asset('img/EmblemaOnda.png') }}"
+                    alt="Logo BrisaGamer"
+                    class="brisa-onda">
+
+                <span class="brisa-nome">
+                    <span class="brisa-texto">Brisa</span><span class="gamer-texto">Gamer</span>
+                </span>
+
+            </a>
+
+            <!-- Botão para voltar à loja sem cadastro -->
+            <div class="brisa-navbar-acoes">
+                <a href="{{ route('loja.index') }}"
+                class="btn btn-outline-light">
+                    Continuar sem cadastro
+                </a>
+            </div>
+
+        </div>
+
+    </nav>
 
 <main class="container py-5">
     <div class="row justify-content-center">
@@ -38,7 +61,7 @@
                     </h3>
 
                     <p class="text-muted text-center mb-4">
-                        Cadastre-se para utilizar sua conta na LojaOnline.
+                        Crie sua conta na BrisaGamer e aproveite o universo gamer!
                     </p>
 
                     <!-- Exibe erros de validação. -->
@@ -120,9 +143,11 @@
                         </button>
                     </form>
 
+                    {{-- Retorna à loja e solicita a abertura do modal de login. --}}
                     <p class="text-center mt-4 mb-0">
                         Já possui conta?
-                        <a href="{{ route('cliente.login') }}">
+
+                        <a href="{{ route('loja.index') }}?abrirLogin=1">
                             Entrar
                         </a>
                     </p>

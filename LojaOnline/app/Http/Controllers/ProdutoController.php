@@ -19,14 +19,12 @@ class ProdutoController extends Controller
     public function store(Request $request)
     {
         $dados = $request->validate([
-            'nome' => 'required|string|max:255',
-            'descricao' => 'nullable|string',
-            'preco' => 'required|numeric|min:0',
-            'estoque' => 'required|integer|min:0',
-            'imagem' => [
-                'nullable',
-                File::image()->max('2mb'),
-            ],
+            'nome' => ['required', 'string', 'max:255'],
+            'descricao' => ['nullable', 'string'],
+            'preco' => ['required', 'numeric', 'min:0'],
+            'estoque' => ['required', 'integer', 'min:0'],
+            'categoria' => ['required', 'in:pc_gamer,consoles,perifericos,monitores,jogos'],
+            'imagem' => ['nullable', 'image', 'max:2048'],
         ]);
 
         if ($request->hasFile('imagem')) {
@@ -43,16 +41,13 @@ class ProdutoController extends Controller
     public function update(Request $request, Produto $produto)
     {
         $dados = $request->validate([
-            'nome' => 'required|string|max:255',
-            'descricao' => 'nullable|string',
-            'preco' => 'required|numeric|min:0',
-            'estoque' => 'required|integer|min:0',
-            'imagem' => [
-                'nullable',
-                File::image()->max('2mb'),
-            ],
+            'nome' => ['required', 'string', 'max:255'],
+            'descricao' => ['nullable', 'string'],
+            'preco' => ['required', 'numeric', 'min:0'],
+            'estoque' => ['required', 'integer', 'min:0'],
+            'categoria' => ['required', 'in:pc_gamer,consoles,perifericos,monitores,jogos'],
+            'imagem' => ['nullable', 'image', 'max:2048'],
         ]);
-
         $imagemAntiga = $produto->imagem;
 
         if ($request->hasFile('imagem')) {

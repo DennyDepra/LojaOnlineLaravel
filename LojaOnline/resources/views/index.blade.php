@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -6,7 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Catálogo de Produtos | LojaOnline</title>
+    <title>BrisaGamer</title>
+    <link rel="icon"
+        type="image/png"
+        href="{{ asset('img/EmblemaOnda.png') }}">
 
     <!-- Importa os estilos do Bootstrap 5 -->
     <link
@@ -134,34 +136,69 @@
             border-radius: 16px 16px 0 0;
         }
     </style>
+    <!-- Identidade visual Neon Sunset (somente estilos) -->
+    <link rel="stylesheet" href="{{ asset('css/neon-sunset.css') }}">
 </head>
 
 <body>
 
-<!-- ==================================================
-     CABEÇALHO PRINCIPAL DA LOJA
-================================================== -->
-<header class="topbar">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
-            <h3 class="brand-name mb-0">LojaOnline</h3>
+    <!-- ==================================================
+        CABEÇALHO PRINCIPAL DA LOJA
+    ================================================== -->
 
-            <span class="text-muted small">
-                Painel Administrativo
-            </span>
+    <!-- ==================================================
+        CABEÇALHO ADMINISTRATIVO - BRISAGAMER
+    ================================================== -->
+    <header>
+        <nav class="navbar navbar-brisa">
 
-            {{-- Encerra a sessão administrativa com segurança. --}}
-            <form action="{{ route('admin.logout') }}" method="POST">
-                @csrf
+            <div class="container brisa-navbar-container">
 
-                <button type="submit" class="btn btn-outline-danger">
-                    <i class="bi bi-box-arrow-right"></i>
-                    Sair
-                </button>
-            </form>
-        </div>
-    </div>
-</header>
+                <!-- Logo da BrisaGamer -->
+                <a href="{{ route('loja.index') }}"
+                class="navbar-brand brisa-logo">
+
+                    <!-- Onda original com fundo transparente -->
+                    <img src="{{ asset('img/EmblemaOnda.png') }}"
+                        alt="Logo BrisaGamer"
+                        class="brisa-onda">
+
+                    <!-- Nome estilizado da loja -->
+                    <span class="brisa-nome">
+                        <span class="brisa-texto">Brisa</span><span class="gamer-texto">Gamer</span>
+                    </span>
+
+                </a>
+
+                <!-- Botões do painel administrativo -->
+                <div class="brisa-navbar-acoes">
+
+                    <!-- Retorna à loja sem encerrar a sessão -->
+                    <a href="{{ route('loja.index') }}"
+                    class="btn btn-outline-light">
+                        Voltar à loja
+                    </a>
+
+                    <!-- Encerra a sessão administrativa -->
+                    <form action="{{ route('admin.logout') }}"
+                        method="POST"
+                        class="m-0">
+
+                        @csrf
+
+                        <button type="submit"
+                                class="btn btn-outline-light">
+                            Sair
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </nav>
+    </header>
 
 <main class="container py-5">
 
@@ -509,6 +546,45 @@
                                required>
                     </div>
 
+                <!-- Categoria do produto -->
+                <div class="mb-3">
+                    <label for="categoria" class="form-label">
+                        Categoria
+                    </label>
+
+                    <select name="categoria"
+                            id="categoria"
+                            class="form-select"
+                            required>
+
+                        <option value="" selected disabled>
+                            Selecione uma categoria
+                        </option>
+
+                        <option value="pc_gamer" {{ old('categoria') == 'pc_gamer' ? 'selected' : '' }}>
+                            PC Gamer Montado
+                        </option>
+
+                        <option value="consoles" {{ old('categoria') == 'consoles' ? 'selected' : '' }}>
+                            Consoles
+                        </option>
+
+                        <option value="perifericos" {{ old('categoria') == 'perifericos' ? 'selected' : '' }}>
+                            Periféricos
+                        </option>
+
+                        <option value="monitores" {{ old('categoria') == 'monitores' ? 'selected' : '' }}>
+                            Monitores
+                        </option>
+
+                        <option value="jogos" {{ old('categoria') == 'jogos' ? 'selected' : '' }}>
+                            Jogos
+                        </option>
+
+                    </select>
+                </div>
+
+
                     <!-- Descrição do produto -->
                     <div class="mb-3">
                         <label class="form-label">Descrição</label>
@@ -602,7 +678,7 @@
                 @method('PUT')
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="tituloEditar">
+                    <h5 class="modal-title" id="tituloEditar" data-categoria="{{ $produto->categoria }}">
                         Editar Produto
                     </h5>
 
@@ -623,6 +699,27 @@
                                class="form-control"
                                required>
                     </div>
+
+                    <!-- Categoria atual do produto -->
+                    <div class="mb-3">
+                        <label for="editarCategoria" class="form-label">
+                            Categoria
+                        </label>
+
+                        <select name="categoria"
+                                id="editarCategoria"
+                                class="form-select"
+                                required>
+
+                            <option value="pc_gamer">PC Gamer Montado</option>
+                            <option value="consoles">Consoles</option>
+                            <option value="perifericos">Periféricos</option>
+                            <option value="monitores">Monitores</option>
+                            <option value="jogos">Jogos</option>
+
+                        </select>
+                    </div>
+
 
                     <!-- Descrição preenchida automaticamente -->
                     <div class="mb-3">
@@ -726,210 +823,214 @@
 
                 @csrf
 
-                <!-- Laravel interpreta a requisição como DELETE -->
-                @method('DELETE')
+                    <!-- Laravel interpreta a requisição como DELETE -->
+                    @method('DELETE')
 
-                <div class="modal-header">
-                    <h5 class="modal-title text-danger" id="tituloExcluir">
-                        Confirmar Exclusão
-                    </h5>
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger" id="tituloExcluir">
+                            Confirmar Exclusão
+                        </h5>
 
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Fechar"></button>
-                </div>
-
-                <div class="modal-body">
-
-                    <!-- Alerta sobre a exclusão permanente -->
-                    <div class="alert alert-warning">
-                        Atenção! Esta ação não poderá ser desfeita.
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Fechar"></button>
                     </div>
 
-                    <p>
-                        Deseja realmente excluir o produto
-                        <strong id="nomeProdutoExcluir"></strong>?
-                    </p>
-                </div>
+                    <div class="modal-body">
 
-                <div class="modal-footer">
+                        <!-- Alerta sobre a exclusão permanente -->
+                        <div class="alert alert-warning">
+                            Atenção! Esta ação não poderá ser desfeita.
+                        </div>
 
-                    <!-- Fecha o modal e mantém o produto -->
-                    <button type="button"
-                            class="btn btn-secondary"
-                            data-bs-dismiss="modal">
-                        Não, cancelar
-                    </button>
+                        <p>
+                            Deseja realmente excluir o produto
+                            <strong id="nomeProdutoExcluir"></strong>?
+                        </p>
+                    </div>
 
-                    <!-- Confirma a exclusão no Laravel -->
-                    <button type="submit" class="btn btn-danger">
-                        Sim, excluir
-                    </button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+
+                        <!-- Fecha o modal e mantém o produto -->
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            Não, cancelar
+                        </button>
+
+                        <!-- Confirma a exclusão no Laravel -->
+                        <button type="submit" class="btn btn-danger">
+                            Sim, excluir
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Importa o JavaScript do Bootstrap, incluindo os modais -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Importa o JavaScript do Bootstrap, incluindo os modais -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-    /* ==================================================
-       PESQUISA INSTANTÂNEA DE PRODUTOS
-    ================================================== */
+    <script>
+        /* ==================================================
+        PESQUISA INSTANTÂNEA DE PRODUTOS
+        ================================================== */
 
-    // Localiza o campo de pesquisa.
-    const pesquisa = document.getElementById('pesquisaProduto');
+        // Localiza o campo de pesquisa.
+        const pesquisa = document.getElementById('pesquisaProduto');
 
-    // Recupera todos os cards de produtos.
-    const cards = document.querySelectorAll('.item-produto');
+        // Recupera todos os cards de produtos.
+        const cards = document.querySelectorAll('.item-produto');
 
-    // Mensagem apresentada quando não há resultados.
-    const semResultados = document.getElementById('mensagemSemResultados');
+        // Mensagem apresentada quando não há resultados.
+        const semResultados = document.getElementById('mensagemSemResultados');
 
-    // Executa a pesquisa sempre que o usuário digita.
-    pesquisa.addEventListener('input', function () {
+        // Executa a pesquisa sempre que o usuário digita.
+        pesquisa.addEventListener('input', function () {
 
-        // Normaliza o texto para facilitar a comparação.
-        const termo = pesquisa.value.toLocaleLowerCase('pt-BR').trim();
+            // Normaliza o texto para facilitar a comparação.
+            const termo = pesquisa.value.toLocaleLowerCase('pt-BR').trim();
 
-        // Conta quantos produtos correspondem à pesquisa.
-        let encontrados = 0;
+            // Conta quantos produtos correspondem à pesquisa.
+            let encontrados = 0;
 
-        // Percorre todos os cards.
-        cards.forEach(function (card) {
+            // Percorre todos os cards.
+            cards.forEach(function (card) {
 
-            // Recupera o nome e a descrição do produto.
-            const texto = card.dataset.busca.toLocaleLowerCase('pt-BR');
+                // Recupera o nome e a descrição do produto.
+                const texto = card.dataset.busca.toLocaleLowerCase('pt-BR');
 
-            // Verifica se o produto corresponde à pesquisa.
-            const corresponde = texto.includes(termo);
+                // Verifica se o produto corresponde à pesquisa.
+                const corresponde = texto.includes(termo);
 
-            // Oculta ou exibe o card.
-            card.classList.toggle('d-none', !corresponde);
+                // Oculta ou exibe o card.
+                card.classList.toggle('d-none', !corresponde);
 
-            if (corresponde) {
-                encontrados++;
-            }
+                if (corresponde) {
+                    encontrados++;
+                }
+            });
+
+            // Mostra a mensagem somente se não houver resultados.
+            semResultados.classList.toggle('d-none', encontrados > 0);
         });
 
-        // Mostra a mensagem somente se não houver resultados.
-        semResultados.classList.toggle('d-none', encontrados > 0);
-    });
+        /* ==================================================
+        PREENCHIMENTO AUTOMÁTICO DO MODAL DE EDIÇÃO
+        ================================================== */
 
-    /* ==================================================
-       PREENCHIMENTO AUTOMÁTICO DO MODAL DE EDIÇÃO
-    ================================================== */
+        // Recupera o modal de edição.
+        const modalEditar = document.getElementById('modalEditar');
 
-    // Recupera o modal de edição.
-    const modalEditar = document.getElementById('modalEditar');
+        // Executa quando o Bootstrap abre o modal.
+        modalEditar.addEventListener('show.bs.modal', function (event) {
 
-    // Executa quando o Bootstrap abre o modal.
-    modalEditar.addEventListener('show.bs.modal', function (event) {
+            // Identifica o botão Editar que foi clicado.
+            const botao = event.relatedTarget;
 
-        // Identifica o botão Editar que foi clicado.
-        const botao = event.relatedTarget;
+            if (!botao) return;
 
-        if (!botao) return;
+            // Define a URL de atualização do produto selecionado.
+            document.getElementById('formEditar').action = botao.dataset.url;
 
-        // Define a URL de atualização do produto selecionado.
-        document.getElementById('formEditar').action = botao.dataset.url;
+            // Preenche os campos com os dados do produto.
+            document.getElementById('editarNome').value =
+                botao.dataset.nome;
 
-        // Preenche os campos com os dados do produto.
-        document.getElementById('editarNome').value =
-            botao.dataset.nome;
+            document.getElementById('editarDescricao').value =
+                botao.dataset.descricao || '';
 
-        document.getElementById('editarDescricao').value =
-            botao.dataset.descricao || '';
+            document.getElementById('editarPreco').value =
+                botao.dataset.preco;
 
-        document.getElementById('editarPreco').value =
-            botao.dataset.preco;
+            document.getElementById('editarEstoque').value =
+                botao.dataset.estoque;
 
-        document.getElementById('editarEstoque').value =
-            botao.dataset.estoque;
+            // Localiza os elementos de visualização da imagem.
+            const imagem = document.getElementById('editarImagemAtual');
+            const semImagem = document.getElementById('editarSemImagem');
 
-        // Localiza os elementos de visualização da imagem.
-        const imagem = document.getElementById('editarImagemAtual');
-        const semImagem = document.getElementById('editarSemImagem');
+            // Verifica se existe uma imagem cadastrada.
+            if (botao.dataset.imagem) {
 
-        // Verifica se existe uma imagem cadastrada.
-        if (botao.dataset.imagem) {
+                // Exibe a imagem atual.
+                imagem.src = botao.dataset.imagem;
+                imagem.classList.remove('d-none');
+                semImagem.classList.add('d-none');
 
-            // Exibe a imagem atual.
-            imagem.src = botao.dataset.imagem;
-            imagem.classList.remove('d-none');
-            semImagem.classList.add('d-none');
+            } else {
 
-        } else {
+                // Oculta a imagem quando o produto não tem foto.
+                imagem.removeAttribute('src');
+                imagem.classList.add('d-none');
+                semImagem.classList.remove('d-none');
+            }
 
-            // Oculta a imagem quando o produto não tem foto.
-            imagem.removeAttribute('src');
-            imagem.classList.add('d-none');
-            semImagem.classList.remove('d-none');
+            // Limpa o campo de upload de edições anteriores.
+            document.querySelector('#formEditar input[type="file"]').value = '';
+        });
+
+        /* ==================================================
+        PREENCHIMENTO DO MODAL DE EXCLUSÃO
+        ================================================== */
+
+        // Recupera o modal de confirmação.
+        const modalExcluir = document.getElementById('modalExcluir');
+
+        // Executa quando o modal de exclusão é aberto.
+        modalExcluir.addEventListener('show.bs.modal', function (event) {
+
+            // Identifica o botão Excluir selecionado.
+            const botao = event.relatedTarget;
+
+            if (!botao) return;
+
+            // Define a URL responsável pela exclusão.
+            document.getElementById('formExcluir').action =
+                botao.dataset.url;
+
+            // Mostra o nome do produto na mensagem de confirmação.
+            document.getElementById('nomeProdutoExcluir').textContent =
+                botao.dataset.nome;
+        });
+
+        /* ==================================================
+        EXIBE O TOAST DE SUCESSO AUTOMATICAMENTE
+        ================================================== */
+
+        /* ==================================================
+        CONTROLE DA NOTIFICAÇÃO TOAST
+
+        - Exibe a notificação automaticamente.
+        - Mantém a mensagem visível por 3 segundos.
+        - Permite fechar manualmente.
+        ================================================== */
+
+            // Procura o Toast de sucesso no HTML.
+            const toastElemento = document.getElementById('toastSucesso');
+
+            // Verifica se existe uma mensagem de sucesso na página.
+            if (toastElemento) {
+
+            // Cria a instância do Toast utilizando o Bootstrap 5.
+            const toast = new bootstrap.Toast(toastElemento, {
+
+                // Permite que a notificação desapareça automaticamente.
+                autohide: true,
+
+                // Define o tempo de exibição em milissegundos.
+                // 3000 milissegundos equivalem a 3 segundos.
+                delay: 3000
+            });
+
+            // Exibe a notificação ao carregar a página.
+            toast.show();
         }
 
-        // Limpa o campo de upload de edições anteriores.
-        document.querySelector('#formEditar input[type="file"]').value = '';
-    });
-
-    /* ==================================================
-       PREENCHIMENTO DO MODAL DE EXCLUSÃO
-    ================================================== */
-
-    // Recupera o modal de confirmação.
-    const modalExcluir = document.getElementById('modalExcluir');
-
-    // Executa quando o modal de exclusão é aberto.
-    modalExcluir.addEventListener('show.bs.modal', function (event) {
-
-        // Identifica o botão Excluir selecionado.
-        const botao = event.relatedTarget;
-
-        if (!botao) return;
-
-        // Define a URL responsável pela exclusão.
-        document.getElementById('formExcluir').action =
-            botao.dataset.url;
-
-        // Mostra o nome do produto na mensagem de confirmação.
-        document.getElementById('nomeProdutoExcluir').textContent =
-            botao.dataset.nome;
-    });
-
-    /* ==================================================
-       EXIBE O TOAST DE SUCESSO AUTOMATICAMENTE
-    ================================================== */
-
-    /* ==================================================
-    CONTROLE DA NOTIFICAÇÃO TOAST
-
-    - Exibe a notificação automaticamente.
-    - Mantém a mensagem visível por 3 segundos.
-    - Permite fechar manualmente.
-    ================================================== */
-
-        // Procura o Toast de sucesso no HTML.
-        const toastElemento = document.getElementById('toastSucesso');
-
-        // Verifica se existe uma mensagem de sucesso na página.
-        if (toastElemento) {
-
-        // Cria a instância do Toast utilizando o Bootstrap 5.
-        const toast = new bootstrap.Toast(toastElemento, {
-
-            // Permite que a notificação desapareça automaticamente.
-            autohide: true,
-
-            // Define o tempo de exibição em milissegundos.
-            // 3000 milissegundos equivalem a 3 segundos.
-            delay: 3000
-        });
-
-        // Exibe a notificação ao carregar a página.
-        toast.show();
-    }
+        // Preenche automaticamente a categoria do produto.
+        document.getElementById('editarCategoria').value =
+        botao.dataset.categoria || '';
 
 
 </script>
