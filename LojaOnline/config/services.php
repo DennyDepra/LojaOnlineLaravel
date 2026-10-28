@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'brisagamer' => [
+    'whatsapp' => env('BRISAGAMER_WHATSAPP'),
+    ],
+
 ];

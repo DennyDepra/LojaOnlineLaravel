@@ -88,6 +88,6 @@ class LoginController extends Controller
 
         // Retorna para a loja pública.
         return redirect()->route('loja.index')
-            ->with('success', 'Você saiu da conta.');
+            ->with('Sucesso', 'Você saiu da conta.');
     }
 }

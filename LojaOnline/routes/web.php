@@ -8,6 +8,7 @@ use App\Http\Controllers\CarrinhoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\Auth\ClienteAuthController;
+use App\Http\Controllers\PedidoWhatsappController;
 
     // =====================================================
     // LOJA PÚBLICA
@@ -122,3 +123,19 @@ use App\Http\Controllers\Auth\ClienteAuthController;
         ->middleware('auth')
         ->name('cliente.sair');
 
+
+    // ==========================================
+    // COMPRAS PELO WHATSAPP - BRISAGAMER
+    // ==========================================
+
+    // Compra direta de um único produto.
+    Route::post('/comprar/{produto}', [
+        PedidoWhatsappController::class,
+        'comprar'
+    ])->name('pedido.comprar');
+
+    // Finalização dos produtos do carrinho.
+    Route::post('/finalizar-compra', [
+        PedidoWhatsappController::class,
+        'finalizar'
+    ])->name('pedido.finalizar');

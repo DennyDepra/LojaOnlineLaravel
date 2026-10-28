@@ -59,7 +59,7 @@ class ClienteAuthController extends Controller
         $request->session()->regenerate();
 
         return redirect()->route('loja.index')
-            ->with('success', 'Cadastro realizado com sucesso!');
+            ->with('Sucesso', 'Cadastro realizado com sucesso!');
     }
 
     /**
@@ -102,7 +102,7 @@ class ClienteAuthController extends Controller
 
         // Cliente e administrador visualizam a mesma loja.
         return redirect()->route('loja.index')
-            ->with('success', 'Login realizado com sucesso!');
+            ->with('Sucesso', 'Login realizado com sucesso!');
     }
 
 
@@ -117,6 +117,6 @@ class ClienteAuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('loja.index')
-            ->with('success', 'Você saiu da sua conta.');
+            ->with('Sucesso', 'Você saiu da sua conta.');
     }
 }

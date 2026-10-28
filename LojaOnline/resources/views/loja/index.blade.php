@@ -375,11 +375,12 @@
                                                     Quantidade
                                                 </label>
 
+                                                {{-- Quantidade utilizada pelo carrinho e pelo botão Comprar --}}
                                                 <input
                                                     type="number"
                                                     id="quantidadeProduto{{ $produto->id }}"
                                                     name="quantidade"
-                                                    class="form-control"
+                                                    class="form-control quantidade-produto"
                                                     value="1"
                                                     min="1"
                                                     max="{{ $produto->estoque }}"
@@ -397,12 +398,25 @@
                                             </button>
 
                                         </form>
-                                        {{-- Botão Comprar agora - apenas visual, sem funcionalidade. --}}
-                                        <button type="button"
-                                                class="btn btn-primary w-100 mt-2"
-                                                disabled>
-                                            Comprar agora
-                                        </button>
+                                        {{-- Comprar diretamente pelo WhatsApp --}}
+                                        <form action="{{ route('pedido.comprar', $produto->id) }}"
+                                            method="POST"
+                                            target="_blank"
+                                            class="mt-2 form-comprar-whatsapp">
+
+                                            @csrf
+
+                                            {{-- A quantidade será sincronizada com o campo já existente --}}
+                                            <input type="hidden"
+                                                name="quantidade"
+                                                value="1"
+                                                class="quantidade-comprar">
+
+                                            <button type="submit"
+                                                    class="btn btn-primary w-100">
+                                                Comprar
+                                            </button>
+                                        </form>
 
                                     </div>
                                 </div>
@@ -604,7 +618,7 @@
                     </button>
 
                     {{-- Checkout será desenvolvido posteriormente. --}}
-                    <button type="button" class="btn btn-success" disabled>
+                    <button type="button"  id="btnFinalizarWhatsapp" class="btn btn-success">
                         Finalizar compra
                     </button>
 
@@ -613,7 +627,14 @@
             </div>
         </div>
     </div>
-
+    {{-- Formulário para finalizar o carrinho no WhatsApp --}}
+    <form id="formFinalizarWhatsapp"
+        action="{{ route('pedido.finalizar') }}"
+        method="POST"
+        target="_blank"
+        class="d-none">
+        @csrf
+    </form>
     {{-- =====================================================
          NOTIFICAÇÕES TOAST
          ===================================================== --}}
@@ -1209,6 +1230,105 @@
 
     });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Percorre os formulários dos botões Comprar.
+            document.querySelectorAll('.form-comprar-whatsapp')
+                .forEach(function (formulario) {
+
+                    formulario.addEventListener('submit', function (evento) {
+
+                        // Encontra o modal do produto selecionado.
+                        const modal = formulario.closest('.modal');
+
+                        // Quantidade escolhida pelo cliente.
+                        const quantidadeProduto = modal.querySelector(
+                            '.quantidade-produto'
+                        );
+
+                        // Quantidade que será enviada ao Laravel.
+                        const quantidadeComprar = formulario.querySelector(
+                            '.quantidade-comprar'
+                        );
+
+                        // Verifica se a quantidade é válida.
+                        if (!quantidadeProduto.checkValidity()) {
+                            evento.preventDefault();
+                            quantidadeProduto.reportValidity();
+                            return;
+                        }
+
+                        // Copia a quantidade para o formulário Comprar.
+                        quantidadeComprar.value = quantidadeProduto.value;
+                    });
+                });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const botaoFinalizar = document.getElementById(
+                'btnFinalizarWhatsapp'
+            );
+
+            const formularioFinalizar = document.getElementById(
+                'formFinalizarWhatsapp'
+            );
+
+            if (!botaoFinalizar || !formularioFinalizar) {
+                return;
+            }
+
+            // Inicialmente impede finalizar um carrinho vazio.
+            botaoFinalizar.disabled = true;
+
+            // Consulta a sessão do carrinho para habilitar o botão.
+            async function verificarCarrinho() {
+                try {
+                    const resposta = await fetch(
+                        @json(route('carrinho.index', [], false)),
+                        {
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        }
+                    );
+
+                    if (!resposta.ok) {
+                        throw new Error('Erro ao consultar o carrinho.');
+                    }
+
+                    const dados = await resposta.json();
+
+                    botaoFinalizar.disabled =
+                        !dados.itens || dados.itens.length === 0;
+
+                } catch (erro) {
+                    botaoFinalizar.disabled = true;
+                    console.error(erro);
+                }
+            }
+
+            // Atualiza quando o modal é aberto.
+            document.getElementById('modalCarrinho')
+                ?.addEventListener('show.bs.modal', verificarCarrinho);
+
+            // Ao clicar, envia o carrinho atual ao Controller.
+            botaoFinalizar.addEventListener('click', function () {
+                if (!botaoFinalizar.disabled) {
+                    formularioFinalizar.requestSubmit();
+                }
+            });
+
+            // Verifica o estado inicial.
+            verificarCarrinho();
+        });
+    </script>
+
+
 
 
 
