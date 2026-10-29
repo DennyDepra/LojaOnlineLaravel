@@ -75,73 +75,199 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('cliente.cadastrar') }}"
-                          method="POST">
-                        @csrf
 
-                        <div class="mb-3">
-                            <label for="name" class="form-label">
-                                Nome completo
-                            </label>
+    <form action="{{ route('cliente.cadastrar') }}" method="POST">
+        @csrf
 
-                            <input type="text"
-                                   id="name"
-                                   name="name"
-                                   class="form-control"
-                                   value="{{ old('name') }}"
-                                   maxlength="255"
-                                   autocomplete="name"
-                                   required>
-                        </div>
+            {{-- ==========================================
+                DADOS PESSOAIS
+            ========================================== --}}
 
-                        <div class="mb-3">
-                            <label for="email" class="form-label">
-                                E-mail
-                            </label>
+            <h5 class="fw-bold mb-3">Dados pessoais</h5>
 
-                            <input type="email"
-                                   id="email"
-                                   name="email"
-                                   class="form-control"
-                                   value="{{ old('email') }}"
-                                   autocomplete="email"
-                                   required>
-                        </div>
+            <div class="row g-3 mb-4">
 
-                        <div class="mb-3">
-                            <label for="password" class="form-label">
-                                Senha
-                            </label>
+                {{-- Nome completo --}}
+                <div class="col-md-12">
+                    <label for="name" class="form-label">Nome completo</label>
+                    <input type="text"
+                        id="name"
+                        name="name"
+                        class="form-control"
+                        value="{{ old('name') }}"
+                        maxlength="255"
+                        autocomplete="name"
+                        required>
+                </div>
 
-                            <input type="password"
-                                   id="password"
-                                   name="password"
-                                   class="form-control"
-                                   minlength="8"
-                                   autocomplete="new-password"
-                                   required>
-                        </div>
+                {{-- E-mail --}}
+                <div class="col-md-6">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="email"
+                        id="email"
+                        name="email"
+                        class="form-control"
+                        value="{{ old('email') }}"
+                        autocomplete="email"
+                        required>
+                </div>
 
-                        <div class="mb-4">
-                            <label for="password_confirmation"
-                                   class="form-label">
-                                Confirmar senha
-                            </label>
+                {{-- Telefone --}}
+                <div class="col-md-6">
+                    <label for="telefone" class="form-label">Telefone / WhatsApp</label>
+                    <input type="tel"
+                        id="telefone"
+                        name="telefone"
+                        class="form-control"
+                        value="{{ old('telefone') }}"
+                        placeholder="(41) 99999-9999"
+                        maxlength="20"
+                        autocomplete="tel"
+                        required>
+                </div>
 
-                            <input type="password"
-                                   id="password_confirmation"
-                                   name="password_confirmation"
-                                   class="form-control"
-                                   minlength="8"
-                                   autocomplete="new-password"
-                                   required>
-                        </div>
+                {{-- Senha --}}
+                <div class="col-md-6">
+                    <label for="password" class="form-label">Senha</label>
+                    <input type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required>
+                </div>
 
-                        <button type="submit"
-                                class="btn btn-primary w-100 py-2">
-                            Criar conta
-                        </button>
-                    </form>
+                {{-- Confirmar senha --}}
+                <div class="col-md-6">
+                    <label for="password_confirmation" class="form-label">
+                        Confirmar senha
+                    </label>
+                    <input type="password"
+                        id="password_confirmation"
+                        name="password_confirmation"
+                        class="form-control"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required>
+                </div>
+
+            </div>
+
+            <hr class="my-4">
+
+            {{-- ==========================================
+                ENDEREÇO DE ENTREGA
+            ========================================== --}}
+
+            <h5 class="fw-bold mb-3">Endereço de entrega</h5>
+
+            <div class="row g-3 mb-4">
+
+                {{-- CEP --}}
+                <div class="col-md-4">
+                    <label for="cep" class="form-label">CEP</label>
+                    <input type="text"
+                        id="cep"
+                        name="cep"
+                        class="form-control"
+                        value="{{ old('cep') }}"
+                        placeholder="00000-000"
+                        maxlength="9"
+                        autocomplete="postal-code"
+                        required>
+                </div>
+
+                {{-- Rua / Avenida --}}
+                <div class="col-md-8">
+                    <label for="logradouro" class="form-label">Rua / Avenida</label>
+                    <input type="text"
+                        id="logradouro"
+                        name="logradouro"
+                        class="form-control"
+                        value="{{ old('logradouro') }}"
+                        maxlength="255"
+                        autocomplete="address-line1"
+                        required>
+                </div>
+
+                {{-- Número --}}
+                <div class="col-md-3">
+                    <label for="numero" class="form-label">Número</label>
+                    <input type="text"
+                        id="numero"
+                        name="numero"
+                        class="form-control"
+                        value="{{ old('numero') }}"
+                        maxlength="20"
+                        required>
+                </div>
+
+                {{-- Complemento --}}
+                <div class="col-md-9">
+                    <label for="complemento" class="form-label">
+                        Complemento (opcional)
+                    </label>
+                    <input type="text"
+                        id="complemento"
+                        name="complemento"
+                        class="form-control"
+                        value="{{ old('complemento') }}"
+                        maxlength="255"
+                        placeholder="Apartamento, bloco, casa..."
+                        autocomplete="address-line2">
+                </div>
+
+                {{-- Bairro --}}
+                <div class="col-md-5">
+                    <label for="bairro" class="form-label">Bairro</label>
+                    <input type="text"
+                        id="bairro"
+                        name="bairro"
+                        class="form-control"
+                        value="{{ old('bairro') }}"
+                        maxlength="255"
+                        required>
+                </div>
+
+                {{-- Cidade --}}
+                <div class="col-md-5">
+                    <label for="cidade" class="form-label">Cidade</label>
+                    <input type="text"
+                        id="cidade"
+                        name="cidade"
+                        class="form-control"
+                        value="{{ old('cidade') }}"
+                        maxlength="255"
+                        autocomplete="address-level2"
+                        required>
+                </div>
+
+                {{-- Estado --}}
+                <div class="col-md-2">
+                    <label for="estado" class="form-label">UF</label>
+                    <input type="text"
+                        id="estado"
+                        name="estado"
+                        class="form-control text-uppercase"
+                        value="{{ old('estado') }}"
+                        maxlength="2"
+                        minlength="2"
+                        placeholder="PR"
+                        autocomplete="address-level1"
+                        required>
+                </div>
+
+            </div>
+
+            {{-- Botão de cadastro --}}
+            <button type="submit"
+                    class="btn btn-primary w-100 py-2">
+                Criar conta
+            </button>
+
+        </form>
+
 
                     {{-- Retorna à loja e solicita a abertura do modal de login. --}}
                     <p class="text-center mt-4 mb-0">

@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\Auth\ClienteAuthController;
 use App\Http\Controllers\PedidoWhatsappController;
+use App\Http\Controllers\PerfilController;
 
     // =====================================================
     // LOJA PÚBLICA
@@ -139,3 +140,17 @@ use App\Http\Controllers\PedidoWhatsappController;
         PedidoWhatsappController::class,
         'finalizar'
     ])->name('pedido.finalizar');
+
+
+    // ==========================================
+    // CONFIGURAÇÕES DA CONTA DO CLIENTE
+    // ==========================================
+
+    // Somente usuários autenticados podem atualizar a própria conta.
+    Route::middleware('auth')->group(function () {
+
+        Route::put('/minha-conta', [PerfilController::class, 'atualizar'])
+            ->name('perfil.atualizar');
+
+    });
+

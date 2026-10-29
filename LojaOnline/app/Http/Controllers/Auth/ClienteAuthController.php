@@ -24,43 +24,91 @@ class ClienteAuthController extends Controller
         return view('auth.cliente-cadastro');
     }
 
-    /**
-     * Cadastra um novo cliente.
-     */
-    public function cadastrar(Request $request)
-    {
-        // Impede que uma conta autenticada crie outra conta
-        // por meio deste formulário.
-        if (Auth::check()) {
-            return redirect()->route('loja.index');
-        }
 
-        // Valida os dados enviados pelo cliente.
-        $dados = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'confirmed', Password::min(8)],
-        ]);
+/**
+ * Cadastra um novo cliente com informações pessoais
+ * e endereço de entrega.
+ */
+public function cadastrar(Request $request)
+{
+    // Impede que um usuário autenticado cadastre outra conta.
+    if (Auth::check()) {
+        return redirect()->route('loja.index');
+    }
 
-        // Cria o usuário sem privilégios administrativos.
+    // ==========================================
+    // VALIDAÇÃO DOS DADOS DO CLIENTE
+    // ==========================================
+
+    $dados = $request->validate([
+
+        // Informações pessoais.
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+        'password' => ['required', 'confirmed', Password::min(8)],
+
+        // Telefone de contato.
+        'telefone' => ['required', 'string', 'max:20'],
+
+        // Endereço de entrega.
+        'cep' => ['required', 'string', 'max:9'],
+        'logradouro' => ['required', 'string', 'max:255'],
+        'numero' => ['required', 'string', 'max:20'],
+        'complemento' => ['nullable', 'string', 'max:255'],
+        'bairro' => ['required', 'string', 'max:255'],
+        'cidade' => ['required', 'string', 'max:255'],
+        'estado' => ['required', 'string', 'size:2'],
+
+    ]);
+
+        // ==========================================
+        // CRIAÇÃO DA CONTA
+        // ==========================================
+
+        // Cria um novo usuário.
         $cliente = new User();
 
+        // Informações de acesso.
         $cliente->name = $dados['name'];
         $cliente->email = $dados['email'];
         $cliente->password = Hash::make($dados['password']);
+
+        // Informações de contato.
+        $cliente->telefone = $dados['telefone'];
+
+        // Endereço de entrega.
+        $cliente->cep = $dados['cep'];
+        $cliente->logradouro = $dados['logradouro'];
+        $cliente->numero = $dados['numero'];
+
+        // Complemento é opcional.
+        $cliente->complemento = $dados['complemento'] ?? null;
+
+        $cliente->bairro = $dados['bairro'];
+        $cliente->cidade = $dados['cidade'];
+        $cliente->estado = strtoupper($dados['estado']);
+
+        // Todo cadastro público cria um cliente comum.
+        // Não permite conceder acesso administrativo.
         $cliente->is_admin = false;
 
+        // Salva todas as informações no banco de dados.
         $cliente->save();
 
-        // Autentica o cliente após o cadastro.
+        // ==========================================
+        // LOGIN AUTOMÁTICO APÓS O CADASTRO
+        // ==========================================
+
         Auth::login($cliente);
 
-        // Regenera a sessão para maior segurança.
+        // Regenera a sessão para proteger a autenticação.
         $request->session()->regenerate();
 
+        // Direciona o cliente para a loja.
         return redirect()->route('loja.index')
             ->with('Sucesso', 'Cadastro realizado com sucesso!');
     }
+
 
     /**
      * Exibe o formulário de login do cliente.

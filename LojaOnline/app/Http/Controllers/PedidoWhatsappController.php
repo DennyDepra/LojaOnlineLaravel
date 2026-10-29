@@ -19,6 +19,61 @@ class PedidoWhatsappController extends Controller
         $mensagem = "🎮 *NOVO PEDIDO - BRISAGAMER*\n\n";
         $mensagem .= "Olá! Gostaria de realizar o seguinte pedido:\n\n";
 
+        // ==========================================
+        // DADOS DO CLIENTE E ENDEREÇO DE ENTREGA
+        // ==========================================
+
+        // Recupera o usuário autenticado, caso exista.
+        $cliente = auth()->user();
+
+        if ($cliente) {
+
+            // Nome e telefone cadastrados.
+            $mensagem .= "👤 *DADOS DO CLIENTE*\n";
+            $mensagem .= "Nome: {$cliente->name}\n";
+            $mensagem .= "Telefone: " .
+                ($cliente->telefone ?: 'Não informado') . "\n\n";
+
+            // Verifica se o cliente possui endereço cadastrado.
+            if (
+                $cliente->logradouro &&
+                $cliente->numero &&
+                $cliente->cidade
+            ) {
+
+                $mensagem .= "📍 *ENDEREÇO DE ENTREGA*\n";
+
+                $mensagem .= "Endereço: {$cliente->logradouro}, {$cliente->numero}\n";
+
+                // Complemento é opcional.
+                if ($cliente->complemento) {
+                    $mensagem .= "Complemento: {$cliente->complemento}\n";
+                }
+
+                $mensagem .= "Bairro: " .
+                    ($cliente->bairro ?: 'Não informado') . "\n";
+
+                $mensagem .= "Cidade: {$cliente->cidade}\n";
+
+                $mensagem .= "Estado: " .
+                    ($cliente->estado ?: 'Não informado') . "\n";
+
+                $mensagem .= "CEP: " .
+                    ($cliente->cep ?: 'Não informado') . "\n\n";
+
+            } else {
+
+                // Clientes antigos podem não ter endereço cadastrado.
+                $mensagem .= "📍 Endereço de entrega: A confirmar\n\n";
+            }
+
+        } else {
+
+            // Mantém a possibilidade de comprar sem cadastro.
+            $mensagem .= "👤 Cliente sem cadastro\n";
+            $mensagem .= "📍 Endereço de entrega: A informar\n\n";
+        }
+
         $total = 0;
 
         foreach ($itens as $indice => $item) {

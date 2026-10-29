@@ -79,6 +79,13 @@
                     <span class="text-white small">
                         Olá, {{ auth()->user()->name }}
                     </span>
+                    {{-- Abre as configurações da conta do usuário --}}
+                    <button type="button"
+                            class="btn btn-outline-light"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalMinhaConta">
+                        ⚙ Minha conta
+                    </button>
 
                     <!-- Logout -->
                     <form action="{{ route('cliente.sair') }}"
@@ -472,6 +479,144 @@
 
 
     </main>
+
+    {{-- ==========================================
+        MODAL DE CONFIGURAÇÕES DA CONTA
+    ========================================== --}}
+
+    @auth
+    <div class="modal fade"
+        id="modalMinhaConta"
+        tabindex="-1"
+        aria-labelledby="tituloMinhaConta"
+        aria-hidden="true">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow">
+
+                <form action="{{ route('perfil.atualizar') }}" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="tituloMinhaConta">
+                            ⚙ Configurações da conta
+                        </h5>
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Fechar">
+                        </button>
+                    </div>
+
+                    <div class="modal-body p-4">
+
+                        <h5 class="fw-bold mb-3">Dados pessoais</h5>
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+                                <label class="form-label">Nome completo</label>
+                                <input type="text" name="name"
+                                    class="form-control"
+                                    value="{{ old('name', auth()->user()->name) }}"
+                                    required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">E-mail</label>
+                                <input type="email" name="email"
+                                    class="form-control"
+                                    value="{{ old('email', auth()->user()->email) }}"
+                                    required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Telefone / WhatsApp</label>
+                                <input type="tel" name="telefone"
+                                    class="form-control"
+                                    value="{{ old('telefone', auth()->user()->telefone) }}">
+                            </div>
+
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h5 class="fw-bold mb-3">Endereço de entrega</h5>
+
+                        <div class="row g-3">
+
+                            <div class="col-md-4">
+                                <label class="form-label">CEP</label>
+                                <input type="text" name="cep"
+                                    class="form-control"
+                                    value="{{ old('cep', auth()->user()->cep) }}">
+                            </div>
+
+                            <div class="col-md-8">
+                                <label class="form-label">Rua / Avenida</label>
+                                <input type="text" name="logradouro"
+                                    class="form-control"
+                                    value="{{ old('logradouro', auth()->user()->logradouro) }}">
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Número</label>
+                                <input type="text" name="numero"
+                                    class="form-control"
+                                    value="{{ old('numero', auth()->user()->numero) }}">
+                            </div>
+
+                            <div class="col-md-9">
+                                <label class="form-label">Complemento</label>
+                                <input type="text" name="complemento"
+                                    class="form-control"
+                                    value="{{ old('complemento', auth()->user()->complemento) }}">
+                            </div>
+
+                            <div class="col-md-5">
+                                <label class="form-label">Bairro</label>
+                                <input type="text" name="bairro"
+                                    class="form-control"
+                                    value="{{ old('bairro', auth()->user()->bairro) }}">
+                            </div>
+
+                            <div class="col-md-5">
+                                <label class="form-label">Cidade</label>
+                                <input type="text" name="cidade"
+                                    class="form-control"
+                                    value="{{ old('cidade', auth()->user()->cidade) }}">
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label">UF</label>
+                                <input type="text" name="estado"
+                                    class="form-control text-uppercase"
+                                    maxlength="2"
+                                    value="{{ old('estado', auth()->user()->estado) }}">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit" class="btn btn-primary">
+                            Salvar alterações
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    @endauth
 
     {{-- =====================================================
      MODAL DE LOGIN - CLIENTES E ADMINISTRADORES
