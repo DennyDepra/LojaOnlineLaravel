@@ -678,7 +678,7 @@
                 @method('PUT')
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="tituloEditar" data-categoria="{{ $produto->categoria }}">
+                    <h5 class="modal-title" id="tituloEditar" data-categoria="{{ $produto->categoria ?? '' }}">
                         Editar Produto
                     </h5>
 

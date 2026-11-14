@@ -16,6 +16,9 @@ use Illuminate\Notifications\Notifiable;
     'name',
     'email',
     'password',
+    'is_admin',
+    'cpf',
+    'data_nascimento',
 
     // Informações de contato.
     'telefone',
